@@ -1,0 +1,16 @@
+{
+  "short_name": "Daydot Calc",
+  "name": "Store Daydot Calculator",
+  "icons": [
+    {
+      "src": "icon.png",
+      "type": "image/png",
+      "sizes": "192x192 512x512"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#5c0a14",
+  "theme_color": "#5c0a14",
+  "display": "standalone",
+  "orientation": "portrait"
+}

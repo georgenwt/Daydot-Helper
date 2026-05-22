@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Store Daydot Calculator</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
-    
+    <link rel="manifest" href="manifest.json">
+
     <style>
         :root {
             --costa-dark-burgundy: #5c0a14;
@@ -37,19 +38,23 @@
         .glitter-bg {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: #2a0206; 
+            /* Swapped the near-black hex for your lighter burgundy variable */
+            background-color: var(--costa-dark-burgundy); 
             z-index: -2;
             overflow: hidden;
         }
+        
         /* Moving Interactive Spotlight */
         .glitter-light {
             position: absolute;
             top: -50vh; left: -50vw; right: -50vw; bottom: -50vh;
-            background: radial-gradient(circle at 50% 50%, #9a1122 0%, #4a050f 40%, transparent 70%);
+            /* Brightened the radial gradient using the classic Costa bright red */
+            background: radial-gradient(circle at 50% 50%, var(--costa-bright-red) 0%, #8a0f1d 45%, transparent 75%);
             transform: translateY(calc(var(--scroll-y, 0px) * -0.6));
             z-index: -1;
             will-change: transform;
         }
+        
         /* Crisp Microscopic SVG Grain */
         .glitter-bg::after {
             content: "";
@@ -930,6 +935,14 @@
 
         // Initialize view
         displayProducts();
+
+        if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('Service Worker registered successfully!'))
+            .catch(err => console.log('Service Worker registration failed:', err));
+    });
+}
     </script>
 </body>
 </html>
