@@ -79,7 +79,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: max(12px, env(safe-area-inset-top)) 14px calc(12px + env(safe-area-inset-bottom));
+      padding: max(12px, env(safe-area-inset-top)) 14px 0;
       position: relative;
       overflow-x: hidden;
     }
@@ -123,10 +123,10 @@
       z-index: 1;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
       flex: 1;
       animation: heavyEntrance 0.65s var(--spring-bounce);
-      padding-bottom: 84px;
+      padding-bottom: calc(96px + env(safe-area-inset-bottom));
     }
 
     @keyframes heavyEntrance {
@@ -135,7 +135,7 @@
       100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* Glass Panels */
+    /* Liquid Glass Base */
     .glass-card {
       background: var(--glass-card);
       backdrop-filter: blur(20px);
@@ -155,20 +155,18 @@
       font-size: 1.55rem;
       font-weight: 800;
       letter-spacing: 0.5px;
-      text-transform: uppercase;
     }
 
     h2 {
       font-size: 1.05rem;
       font-weight: 800;
-      text-transform: uppercase;
       letter-spacing: 0.5px;
       text-align: center;
       margin-bottom: 12px;
       color: #ffffff;
     }
 
-    /* Sticky Search */
+    /* Sticky Search Bar */
     .search-section {
       position: sticky;
       top: max(12px, env(safe-area-inset-top));
@@ -450,14 +448,21 @@
       padding: 24px 12px;
     }
 
-    /* Fixed Modular Navigation Dock */
+    /* Flush Native Bottom Dock */
     .floating-nav-dock {
       position: fixed;
-      bottom: max(12px, env(safe-area-inset-bottom));
+      bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      width: calc(100% - 28px);
+      width: 100%;
       max-width: 440px;
+      padding: 6px 14px calc(8px + env(safe-area-inset-bottom));
+      background: rgba(45, 4, 14, 0.75);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border-top: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 22px 22px 0 0;
+      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.45);
       z-index: 100;
     }
 
@@ -465,20 +470,20 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      background: rgba(255, 255, 255, 0.18);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255, 255, 255, 0.32);
-      border-radius: 22px;
-      padding: 6px;
-      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 18px;
+      padding: 5px;
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.35);
     }
 
     .nav-icon-btn {
       background: transparent;
       border: 1px solid transparent;
-      border-radius: 16px;
-      padding: 8px 4px;
+      border-radius: 14px;
+      padding: 7px 4px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -542,7 +547,7 @@
 </head>
 <body>
 
-  <!-- Floating Liquid Bubbles -->
+  <!-- Ambient Bubbles -->
   <div class="bubble-layer">
     <div class="bubble bubble-1"></div>
     <div class="bubble bubble-2"></div>
@@ -586,16 +591,14 @@
     <section class="product-grid" id="productListContainer"></section>
   </main>
 
-  <!-- Modular Navigation Dock (Day Dot active on Left, Tip Split link on Right) -->
+  <!-- Modular Navigation Dock -->
   <nav class="floating-nav-dock" aria-label="Quick Switcher">
     <div class="glass-nav-bar">
-      <!-- Left: Day Dot (Active, non-reloading) -->
       <a href="javascript:void(0)" class="nav-icon-btn active" aria-current="page" onclick="return false;">
         <span class="nav-btn-line1">Day</span>
         <span class="nav-btn-line2">Dot</span>
       </a>
 
-      <!-- Right: Tip Split -->
       <a href="https://www.tip2split.com" class="nav-icon-btn" id="tipSplitLink" rel="noopener">
         <span class="nav-btn-line1">Tip</span>
         <span class="nav-btn-line2">Split</span>
