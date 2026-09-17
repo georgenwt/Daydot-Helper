@@ -18,7 +18,7 @@
   <link rel="icon" type="image/png" href="icon.png" />
 
   <style>
-    /* Local Jost @font-face matching Tip Split */
+    /* Local Jost @font-face */
     @font-face {
       font-family: 'Jost';
       font-style: normal;
@@ -166,7 +166,7 @@
       color: #ffffff;
     }
 
-    /* Sticky Search Bar */
+    /* Liquid Glass Search Bar */
     .search-section {
       position: sticky;
       top: max(12px, env(safe-area-inset-top));
@@ -180,26 +180,30 @@
 
     .search-input {
       width: 100%;
-      height: 48px;
-      background: rgba(0, 0, 0, 0.28);
-      border: 1.5px solid rgba(255, 255, 255, 0.26);
-      border-radius: 16px;
-      padding: 0 42px 0 42px;
+      height: 50px;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      border-radius: 18px;
+      padding: 0 44px 0 44px;
       color: #ffffff;
       font-size: 0.95rem;
       font-weight: 700;
       outline: none;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.4);
       transition: all 0.3s var(--spring-bounce);
     }
 
     .search-input::placeholder {
-      color: rgba(255, 255, 255, 0.5);
-      font-weight: 400;
+      color: rgba(255, 255, 255, 0.65);
+      font-weight: 500;
     }
 
     .search-input:focus {
-      border-color: rgba(255, 255, 255, 0.75);
-      background: rgba(0, 0, 0, 0.38);
+      background: rgba(255, 255, 255, 0.26);
+      border-color: rgba(255, 255, 255, 0.65);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.5);
       transform: scale(1.01);
     }
 
@@ -214,18 +218,18 @@
     }
 
     .search-icon {
-      left: 14px;
-      color: rgba(255, 255, 255, 0.65);
+      left: 15px;
+      color: rgba(255, 255, 255, 0.75);
       pointer-events: none;
     }
 
     .clear-icon {
-      right: 12px;
+      right: 14px;
       color: #ffffff;
       opacity: 0;
       pointer-events: none;
       cursor: pointer;
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.22);
       border-radius: 50%;
       padding: 3px;
       width: 22px;
@@ -448,7 +452,7 @@
       padding: 24px 12px;
     }
 
-    /* Flush Native Bottom Dock */
+    /* Flush Bottom Dock */
     .floating-nav-dock {
       position: fixed;
       bottom: 0;
@@ -547,7 +551,6 @@
 </head>
 <body>
 
-  <!-- Ambient Bubbles -->
   <div class="bubble-layer">
     <div class="bubble bubble-1"></div>
     <div class="bubble bubble-2"></div>
@@ -562,7 +565,6 @@
       <h1>Daydot Calc</h1>
     </header>
 
-    <!-- Sticky Search -->
     <section class="search-section">
       <div class="search-wrapper" id="searchWrapper">
         <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -581,17 +583,14 @@
       </div>
     </section>
 
-    <!-- Quick Reference -->
     <section class="glass-card">
       <h2>Quick Reference Dates</h2>
       <div class="quick-dates" id="quickDatesContainer"></div>
     </section>
 
-    <!-- Product Directory -->
     <section class="product-grid" id="productListContainer"></section>
   </main>
 
-  <!-- Modular Navigation Dock -->
   <nav class="floating-nav-dock" aria-label="Quick Switcher">
     <div class="glass-nav-bar">
       <a href="javascript:void(0)" class="nav-icon-btn active" aria-current="page" onclick="return false;">
