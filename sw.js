@@ -1,10 +1,12 @@
-const CACHE_NAME = 'daydot-calc-v1';
+const CACHE_NAME = 'daydot-calc-v2';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './icon-192.png',
-  './icon-512.png'
+  './icon.png',
+  './fonts/Jost-Regular.woff2',
+  './fonts/Jost-Bold.woff2',
+  './fonts/Jost-ExtraBold.woff2'
 ];
 
 // Install Service Worker and cache all assets
