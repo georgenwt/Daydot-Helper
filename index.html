@@ -345,6 +345,12 @@
       transition: transform 0.2s var(--spring-bounce);
     }
 
+    .product-card.custom-calc-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.12));
+      border: 1.5px solid rgba(255, 255, 255, 0.45);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+    }
+
     .product-card:active {
       transform: scale(0.98);
     }
@@ -671,6 +677,82 @@
       return matrix[b.length][a.length];
     }
 
+    // Natural Language Shelf-Life Parser
+    function parseDurationQuery(rawQuery) {
+      if (!rawQuery) return null;
+      let query = rawQuery.toLowerCase().trim().replace(/[-_]/g, ' ');
+
+      const wordToNum = {
+        one: 1, a: 1, an: 1, two: 2, three: 3, four: 4, five: 5,
+        six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12
+      };
+
+      for (const [w, n] of Object.entries(wordToNum)) {
+        query = query.replace(new RegExp(`\\b${w}\\b`, 'g'), n);
+      }
+
+      const match = query.match(/^(\d+)\s*([a-z]+)?$/);
+      if (!match) return null;
+
+      const num = parseInt(match[1], 10);
+      if (isNaN(num) || num <= 0 || num > 730) return null;
+
+      const unit = match[2] || '';
+
+      const isHour = /^(h|hr|hrs|hour|hours|hou|hourss)$/.test(unit);
+      const isDay = /^(d|dy|dys|day|days|da|dasy)$/.test(unit);
+      const isWeek = /^(w|wk|wks|week|weeks|wee|weks|wek)$/.test(unit);
+      const isMonth = /^(m|mo|mos|mth|mths|month|months|mon|mnth|mnths)$/.test(unit);
+
+      if (isHour || (!unit && (num === 24 || num === 48))) {
+        const days = Math.round(num / 24) || 1;
+        return {
+          name: `${num} ${num === 1 ? 'HOUR' : 'HOURS'}`,
+          label: `${num} ${num === 1 ? 'HOUR' : 'HOURS'}`,
+          days: days,
+          months: 0,
+          includeTime: true,
+          isCustom: true
+        };
+      }
+
+      if (isWeek) {
+        return {
+          name: `${num} ${num === 1 ? 'WEEK' : 'WEEKS'}`,
+          label: `${num} ${num === 1 ? 'WEEK' : 'WEEKS'} (${num * 7} DAYS)`,
+          days: num * 7,
+          months: 0,
+          includeTime: false,
+          isCustom: true
+        };
+      }
+
+      if (isMonth) {
+        return {
+          name: `${num} ${num === 1 ? 'MONTH' : 'MONTHS'}`,
+          label: `${num} ${num === 1 ? 'MONTH' : 'MONTHS'}`,
+          days: 0,
+          months: num,
+          includeTime: false,
+          isCustom: true
+        };
+      }
+
+      if (isDay || (!unit && num > 0)) {
+        const equivWeeks = num % 7 === 0 ? ` (${num / 7} WEEKS)` : '';
+        return {
+          name: `${num} ${num === 1 ? 'DAY' : 'DAYS'}`,
+          label: `${num} ${num === 1 ? 'DAY' : 'DAYS'}${equivWeeks}`,
+          days: num,
+          months: 0,
+          includeTime: false,
+          isCustom: true
+        };
+      }
+
+      return null;
+    }
+
     function calculateFutureDateHtml(daysToAdd = 0, monthsToAdd = 0, includeTime = false) {
       const date = new Date();
       if (monthsToAdd !== 0) date.setMonth(date.getMonth() + monthsToAdd);
@@ -735,9 +817,15 @@
       const searchLower = searchRaw.toLowerCase();
       if (!searchLower) return products;
 
+      const durationItem = parseDurationQuery(searchLower);
       const isPureNumber = /^\d+$/.test(searchLower);
 
-      return products.filter(product => {
+      const matched = products.filter(product => {
+        if (durationItem) {
+          if (durationItem.days > 0 && product.days === durationItem.days) return true;
+          if (durationItem.months > 0 && product.months === durationItem.months) return true;
+        }
+
         if (isPureNumber) {
           const labelNum = product.label.split(' ')[0];
           if (labelNum === searchLower) return true;
@@ -771,6 +859,12 @@
         }
         return false;
       });
+
+      if (durationItem) {
+        return [durationItem, ...matched];
+      }
+
+      return matched;
     }
 
     function renderSticker(product) {
@@ -798,11 +892,11 @@
 
       matched.forEach(product => {
         const card = document.createElement('article');
-        card.className = 'glass-card product-card';
+        card.className = `glass-card product-card ${product.isCustom ? 'custom-calc-card' : ''}`;
         card.innerHTML = `
           <div class="product-info">
-            <div class="product-name">${product.name}</div>
-            <div class="product-life">Shelf life: ${product.label}</div>
+            <div class="product-name">${product.isCustom ? '⚡ ' + product.name : product.name}</div>
+            <div class="product-life">${product.isCustom ? 'CALCULATED EXPIRY: ' + product.label : 'Shelf life: ' + product.label}</div>
           </div>
           ${renderSticker(product)}
         `;
@@ -833,7 +927,7 @@
           const item = document.createElement('div');
           item.className = 'suggestion-item';
           item.innerHTML = `
-            <div class="suggestion-name-wrapper">${match.name}</div>
+            <div class="suggestion-name-wrapper">${match.isCustom ? '⚡ ' + match.name + ' (Calculated)' : match.name}</div>
             <div class="suggestion-sticker-wrapper">${renderSticker(match)}</div>
           `;
           item.addEventListener('click', () => {
